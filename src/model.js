@@ -16,7 +16,7 @@ class Model {
     this.#verifyDataDirectoryExists(this.#dataDirPath);
   }
 
-  async getData (req, callback) {
+  async getData (req) {
     const filePath = await this.#getFileName(req.params.id);
     const filename = path.basename(filePath);
     
@@ -30,10 +30,10 @@ class Model {
       metadata.name = metadata.name || filename;
       metadata.description = metadata.description || `GeoJSON from ${filename}`;
       geojson.metadata = metadata;
-      return callback(null, geojson);
+      return geojson;
     } catch (err) {
       err.message = `${loggingPrefix}${err.message}`;
-      callback(err);
+      throw err;
     }
   }
 

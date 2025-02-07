@@ -10,8 +10,6 @@ const fakeKoop = {
   logger: mockLogger,
 };
 
-const { promisify } = require('util');
-
 describe('Model class', () => {
   describe('constructor', () => {
     test('sets options', async () => {
@@ -48,8 +46,7 @@ describe('Model class', () => {
         ttl: 99,
       });
 
-      const getData = promisify(model.getData).bind(model);
-      const geojson = await getData({ params: { id: 'point-fc' } });
+      const geojson = await model.getData({ params: { id: 'point-fc' } });
       expect(geojson).toEqual({
         features: [
           {
@@ -75,8 +72,7 @@ describe('Model class', () => {
         ttl: 99,
       });
 
-      const getData = promisify(model.getData).bind(model);
-      const geojson = await getData({ params: { id: 'point-fc' } });
+      const geojson = await model.getData({ params: { id: 'point-fc' } });
       expect(geojson).toEqual({
         features: [
           {
@@ -102,8 +98,7 @@ describe('Model class', () => {
         ttl: 99,
       });
 
-      const getData = promisify(model.getData).bind(model);
-      const geojson = await getData({ params: { id: 'point-f' } });
+      const geojson = await model.getData({ params: { id: 'point-f' } });
       expect(geojson).toEqual({
         features: [
           {
@@ -132,8 +127,7 @@ describe('Model class', () => {
         ttl: 99,
       });
 
-      const getData = promisify(model.getData).bind(model);
-      const geojson = await getData({ params: { id: 'point' } });
+      const geojson = await model.getData({ params: { id: 'point' } });
       expect(geojson).toEqual({
         features: [
           {
@@ -162,10 +156,8 @@ describe('Model class', () => {
         ttl: 99,
       });
 
-      const getData = promisify(model.getData).bind(model);
-
       try {
-        await getData({ params: { id: 'foo' } });
+        await model.getData({ params: { id: 'foo' } });
         throw new Error('should have thrown');
       } catch (error) {
         expect(error.message).toEqual(
@@ -185,10 +177,8 @@ describe('Model class', () => {
         ttl: 99,
       });
 
-      const getData = promisify(model.getData).bind(model);
-
       try {
-        await getData({ params: { id: 'point-fc' } });
+        await model.getData({ params: { id: 'point-fc' } });
         throw new Error('should have thrown');
       } catch (error) {
         expect(error.message).toEqual('File GeoJSON provider: cannot read');
@@ -196,7 +186,7 @@ describe('Model class', () => {
       }
     });
 
-    test('500s if unparseable JSON', async () => {
+    test('500s if unparsable JSON', async () => {
       fs.readFile.mockImplementationOnce(() => {
         return 'not-json';
       });
@@ -206,10 +196,8 @@ describe('Model class', () => {
         ttl: 99,
       });
 
-      const getData = promisify(model.getData).bind(model);
-
       try {
-        await getData({ params: { id: 'point-fc' } });
+        await model.getData({ params: { id: 'point-fc' } });
         throw new Error('should have thrown');
       } catch (error) {
         expect(error.message).toEqual(
